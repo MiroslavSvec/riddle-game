@@ -5,15 +5,20 @@ app = Flask(__name__)
 
 @app.route('/')
 def index():
-	return render_template("index.html")
+	return render_template("profile-page.html")
 
 """ Categories for questions """
 """ Score """
 """ Limit wrong answers """
 """ Add riddle """
 """ Profiles """
-""" Chat / Password / Send Invitaiton """
+""" View Friends """
+""" Chat / Password / Send Invitaiton / """
 
+@app.route('/<user>')
+def chat(user):
+	return render_template("chat.html")
+## Chat in separate window 
 
 if __name__ == '__main__':
     app.run(host=os.getenv('IP'),
