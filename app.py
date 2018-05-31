@@ -15,7 +15,7 @@ def get_profile_data():
 
 @app.route('/')
 def index():
-	return render_template("profile-page.html")
+	return render_template("games.html")
 
 """ Categories for questions """
 """ Score """
@@ -25,10 +25,15 @@ def index():
 """ View Friends """
 """ Chat / Password / Send Invitaiton / """
 
+## Games
+@app.route('/<user>/games')
+def games():
+	return render_template("index.html")
+## Chat in separate page
 @app.route('/<user>')
 def chat(user):
 	return render_template("chat.html")
-## Chat in separate window 
+
 
 if __name__ == '__main__':
     app.run(host=os.getenv('IP'),
