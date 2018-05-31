@@ -1,7 +1,17 @@
 import os
+import json
 from flask import Flask, redirect, render_template
 
 app = Flask(__name__)
+
+## Get Profiles
+
+def get_profile_data():
+	profiles = []
+	with open('data/profiles.txt', 'r') as profile_data:
+		profiles = profile_data.readlines()
+		print(profiles)
+	return profiles
 
 @app.route('/')
 def index():
