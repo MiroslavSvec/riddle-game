@@ -22,7 +22,7 @@
 <body class="fixed-nav sticky-footer bg-dark" id="page-top">
 	<!-- Navigation-->
 	<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
-		<a class="navbar-brand" href="index.html">{{user_name}}User Name</a>
+		<a class="navbar-brand" href="/{{user_name}}">{{user_name}}</a>
 		<button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive"
 		 aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
@@ -35,12 +35,11 @@
 						<span class="nav-link-text">Profiles</span>
 					</a>
 					<ul class="sidenav-second-level collapse" id="collapseComponents">
-						<li>
-							<a href="navbar.html">Navbar</a>
-						</li>
-						<li>
-							<a href="cards.html">Cards</a>
-						</li>
+						{% for profile in profiles %}
+							<li>
+								<a href="/{{profile}}"><i class="fa fa-fw fa-address-card"></i> {{profile}}</a>
+							</li>
+						{% endfor %}
 					</ul>
 				</li>
 				<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Example Pages">
@@ -64,14 +63,12 @@
 					</ul>
 				</li>
 				<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Menu Levels">
-			<!--		<a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseMulti" data-parent="#exampleAccordion"> -->
-					<a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="{{ url_for('index') }}" data-parent="#exampleAccordion">					
-						<i class="fa fa-fw fa-gamepad"></i>					
+				<a class="nav-link nav-link-collapse collapsed" data-toggle="collapse" href="#collapseMulti" data-parent="#exampleAccordion"><i class="fa fa-fw fa-gamepad"></i>				
 						<span class="nav-link-text">Games</span>
 					</a>
 					<ul class="sidenav-second-level collapse" id="collapseMulti">
 						<li>
-							<a href="#">Second Level Item</a>
+							<a href="{{user_name}}/riddle">Riddles</a>
 						</li>
 						<li>
 							<a href="#">Second Level Item</a>
@@ -142,7 +139,7 @@
 						<h6 class="dropdown-header">New Messages:</h6>
 						<div class="dropdown-divider"></div>
 						<!-- Chat Window-->
-						<iframe id="chat-window" src="{{user}}/chat.html" height="100%" width="100%"></iframe>
+						<iframe id="chat-window" src="{{user_name}}/chat" height="100%" width="100%"></iframe>
 						<div class="dropdown-divider"></div>
 						<a class="dropdown-item small" href="#">View all messages</a>
 					</div>

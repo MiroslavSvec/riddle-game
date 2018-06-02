@@ -1,2 +1,0 @@
-## Check values of the profile
-## Check if profile already exist
