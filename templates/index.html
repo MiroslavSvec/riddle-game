@@ -59,6 +59,14 @@
 	<script src="{{ url_for('static', filename='vendor/js/sb-admin.min.js') }}"></script>
 	<!-- Main JS-->
 	<script src="{{ url_for('static', filename='custom/js/main.js') }}"></script>
+	<script>
+		function check_login_details(input) {
+				const user_name = input.username.value;
+				$.post(`/${user_name}/data`, user_name, function (result) {
+					console.log(result)
+				})
+			}
+	</script>
 </body>
 
 </html>
