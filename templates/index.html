@@ -15,8 +15,8 @@
 	<!-- Custom styles for this template-->
 	<link href="{{ url_for('static', filename='vendor/css/sb-admin.css') }}" rel="stylesheet">
 	<!-- Styles-->
-	<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" type="text/css" />
-	<link rel="stylesheet" href="{{ url_for('static', filename='css/screens.css') }}" type="text/css" />
+	<link href="{{ url_for('static', filename='custom/css/styles.css') }}" rel="stylesheet">
+	<link href="{{ url_for('static', filename='custom/css/screens.css') }}" rel="stylesheet">
 </head>
 
 <body class="bg-dark">
@@ -52,7 +52,9 @@
 					<a class="d-block small" href="forgot-password.html">Forgot Password?</a>
 				</div> -->
 			</div>
-
+			<div>
+				<h1 id="lol">Hmmmmmm</h1>
+			</div>
 			<!-- Temporary for testing-->
 
 			<script>
@@ -68,7 +70,7 @@
 	<!-- Custom scripts for all pages-->
 	<script src="{{ url_for('static', filename='vendor/js/sb-admin.min.js') }}"></script>
 	<!-- Main JS-->
-	<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+	<script src="{{ url_for('static', filename='custom/js/main.js') }}"></script>
 </body>
 
 </html>

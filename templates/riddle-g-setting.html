@@ -1,0 +1,42 @@
+{% extends "base.html" %} {% block main_content %}
+
+
+
+<div class="container">
+	<h2 class="text-center">Setting</h2>
+	<div class="card card-login mx-auto mt-5">
+		<div class="card-header text-center">Please choose how to play</div>
+		<div class="card-body">
+			<form method="POST">
+				<div class="form-group">
+					<select name="categories">
+						<option value="general">General</option>
+						<option value="mixed">Mixed</option>
+					</select>
+				</div>
+				<div class="form-check">
+					<input class="form-check-input" type="radio" name="default" id="default" value="option1" checked>
+					<label class="form-check-label" for="default">
+						Default
+					</label>
+				</div>
+				<div class="form-check">
+					<input class="form-check-input" type="radio" name="limit-tries" id="limit-tries" value="option2">
+					<label class="form-check-label" for="limit-tries">
+						Limit your tries
+					</label>
+				</div>
+				<div class="form-group">
+					<input name="tries" type="text" class="form-control">
+				</div>
+				<button type="submit" onclick="" class="btn btn-primary btn-block">Start Game</button>
+			</form>
+			<!--	<div class="text-center">
+						<a class="d-block small mt-3" href="register.html">Register an Account</a>
+						<a class="d-block small" href="forgot-password.html">Forgot Password?</a>
+					</div> -->
+		</div>
+	</div>
+</div>
+
+{% endblock main_content %}
