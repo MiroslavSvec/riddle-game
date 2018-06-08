@@ -41,6 +41,12 @@ Fix bug with injecting nav links (multiple click add to link) --- Fixed
 
 Fix Chat window working in profile page only
 
+### Tuls used for testing
+
+Visual Studio Python debuger
+
+Postman
+
 
 ## Chngelog
 

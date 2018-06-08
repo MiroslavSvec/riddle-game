@@ -64,7 +64,7 @@ def post_data(user_name):
 """ Create profile page """
 
 
-@app.route('/', methods=["GET"])
+@app.route('/', methods=["GET", "POST"])
 def index():
 	## Render index.html by default
 	return render_template("index.html")
