@@ -47,3 +47,5 @@ Fix Chat window working in profile page only
 Scraped redirection to login page as I do not think that is good user experiences.
 If user enters user name wich already exist (as he does not have to know about it)
 will use JS to handle the form check and and then redirect via Python
+
+Created rest API for profile data

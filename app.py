@@ -2,7 +2,7 @@ import os
 import json
 from datetime import datetime
 from random import shuffle 
-from flask import Flask, redirect, request, render_template
+from flask import Flask, redirect, request, render_template, jsonify
 
 app = Flask(__name__)
 
@@ -30,37 +30,42 @@ def read_json(filename):
 		data = json.load(file)
 		return data
 
+""" Rest API for user data """
 
+
+@app.route('/<user_name>/data', methods=["GET"])
+def data(user_name):
+	all_profiles = read_txt('data/profiles/all-profiles.txt')
+	for profile in all_profiles:
+		if profile.strip('\n') == user_name:
+			profile = read_json(f"data/profiles/{user_name}.json")
+			return jsonify(profile)
+
+
+@app.route('/<user_name>/data', methods=["POST"])
+def post_data(user_name):
+	profile_created = datetime.now().strftime("%H:%M:%S")
+	profiles = {}
+	profiles[f'{user_name}'] = []
+	profiles[f'{user_name}'].append(
+            				{'name': f'{user_name}',
+                             'created': f'{profile_created}',
+                             'score': 0,
+                             'right_answers': 0,
+                             'wrong_answers': 0,
+                             'skipped_questions': 0,
+                             })
+
+	write_to_json(f"data/profiles/{user_name}.json", "w", profiles)
+	write_to_txt(f"data/profiles/all-profiles.txt",
+              "a", f"{user_name}" + '\n')
+	return jsonify(profiles)
 
 """ Create profile page """
 
 
-@app.route('/', methods=["GET", "POST"])
+@app.route('/', methods=["GET"])
 def index():
-		## Create Profiles and store them in .json (as profile data) and .txt (append to profiles list)
-	if request.method == "POST":
-		profile_name = request.form["username"]
-		with open('data/profiles/all-profiles.txt', 'r') as file:
-			data = file.readlines()
-			for profile in data:
-				if profile.strip('\n') == profile_name:
-					return render_template("index.html")
-			profile_created = datetime.now().strftime("%H:%M:%S")
-			profiles = {}
-			profiles[f'{profile_name}'] = []
-			profiles[f'{profile_name}'].append(
-                                          {'name': f'{profile_name}',
-                                             'created': f'{profile_created}',
-                                             'score': 0,
-                                             'right_answers': 0,
-                                             'wrong_answers': 0,
-                                             'skipped_questions': 0,
-                                             })
-			write_to_json(f"data/profiles/{profile_name}.json", "w", profiles)
-			write_to_txt(f"data/profiles/all-profiles.txt",
-					             "a", f"{profile_name}" + '\n')
-			## Redirect user to profile page
-			return redirect(profile_name)
 	## Render index.html by default
 	return render_template("index.html")
 
@@ -79,32 +84,32 @@ def profile_page(user_name):
 	return render_template("profile.html",
                         user_name=user_name, page_title=f"{user_name}" + " profile")
 
-""" Login page """
-
-@app.route('/<user_name>/login')
-def login(user_name):
-	return render_template("login.html",
-                        user_name=user_name, page_title=f"{user_name}" + " profile	")
-
 
 """ Riddles Game Setting"""
 
 
 @app.route('/<user_name>/riddle-g-setting', methods=["GET", "POST"])
-def riddle(user_name):
-	profiles_data = read_txt(f"data/profiles/all-profiles.txt")
-	return render_template("riddle-g-setting.html",
+def riddle_g_setting(user_name):
+	if request.method == "POST":
+		profiles_data = read_txt("data/profiles/all-profiles.txt")
+		return redirect(f"/{user_name}/riddle-game")
+	else:
+		profiles_data = read_txt("data/profiles/all-profiles.txt")
+		return render_template("riddle-g-setting.html",
                         user_name=user_name, page_title="Riddle Game Setting", profiles=profiles_data)
 
 
-""" Riddles Game """
+	
 
 
-@app.route('/<user_name>/riddle-game', methods=["GET", "POST"])
-def funcname(user_name):
-	profiles_data = read_txt(f"data/profiles/all-profiles.txt")
+""" Riddle Game """
+
+
+@app.route('/<user_name>/riddle-game', methods = ["GET", "POST"])
+def endless(user_name):
+	profiles_data = read_txt("data/profiles/all-profiles.txt")
 	return render_template("riddle-game.html",
-                        user_name=user_name, page_title="Riddle Game", profiles=profiles_data)
+                        user_name=user_name, page_title="Riddle game", profiles=profiles_data)
 
 
 
