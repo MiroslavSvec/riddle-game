@@ -1,0 +1,27 @@
+/* Will overwrite the BS css later on instead */
+
+.form-control,
+.card, 
+.card_login {
+	background-color: transparent;
+	border: none;
+	color: #ffffff;
+
+
+}
+.form-control:focus,
+.btn-primary,
+.btn-success {
+	background-color: rgba(0, 0, 0, 0.3);
+}
+.card {
+	height: 100%;
+}
+hr {
+	margin-top: 0;
+    margin-bottom: 50px;
+    width: 100%;
+    height: 1px;
+    background-color: #ffffff;
+    border: 0;
+}

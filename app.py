@@ -6,7 +6,7 @@ from flask import Flask, redirect, request, render_template, jsonify
 
 app = Flask(__name__)
 
-""" Write to file """
+""" Helper functions """
 
 def write_to_txt(filename, write_mode, data):
     with open(filename, f"{write_mode}") as file:
@@ -16,8 +16,6 @@ def write_to_txt(filename, write_mode, data):
 def write_to_json(filename, write_mode, data):
     with open(f'{filename}', f'{write_mode}') as outfile:
    		json.dump(data, outfile)
-
-""" Read data """
 
 def read_txt(filename):
 	with open(f'{filename}', "r") as file:
@@ -30,11 +28,7 @@ def read_json(filename):
 		data = json.load(file)
 		return data
 
-""" Rest API for user data """
-
-
-@app.route('/<user_name>/data', methods=["GET"])
-def data(user_name):
+def get_profile_data(user_name):
 	all_profiles = read_txt('data/profiles/all-profiles.txt')
 	for profile in all_profiles:
 		if profile.strip('\n') == user_name:
@@ -42,32 +36,63 @@ def data(user_name):
 			return jsonify(profile)
 
 
-@app.route('/<user_name>/data', methods=["POST"])
-def post_data(user_name):
-	profile_created = datetime.now().strftime("%H:%M:%S")
-	profiles = {}
-	profiles[f'{user_name}'] = []
-	profiles[f'{user_name}'].append(
-            				{'name': f'{user_name}',
-                             'created': f'{profile_created}',
-                             'score': 0,
-                             'right_answers': 0,
-                             'wrong_answers': 0,
-                             'skipped_questions': 0,
-                             })
+def post_profile_data(user_name):
+	profile = get_profile_data(user_name)
+	if profile:
+		return jsonify(user_name)
+	else:
+		profile_created = datetime.now().strftime("%H:%M:%S")
+		profiles = {}
+		profiles[f'{user_name}'] = []
+		profiles[f'{user_name}'].append(
+                    {'name': f'{user_name}',
+					'login': "true",
+                     'created': f'{profile_created}',
+                     'score': 0,
+                     'right_answers': 0,
+                     'wrong_answers': 0,
+                     'skipped_questions': 0,
+                     })		
+		app_data = read_json('data/app_data.json')
+		members_count = app_data['1.0'][0]["members"]
+		app_data['1.0'][0]["members"] = members_count +1
 
-	write_to_json(f"data/profiles/{user_name}.json", "w", profiles)
-	write_to_txt(f"data/profiles/all-profiles.txt",
-              "a", f"{user_name}" + '\n')
-	return jsonify(profiles)
+		write_to_json("data/app_data.json", "w", app_data)
+		write_to_json(f"data/profiles/{user_name}.json", "w", profiles)
+		write_to_txt(f"data/profiles/all-profiles.txt",
+                    "a", f"{user_name}" + '\n')
+
+		return jsonify({'status': "success"}, {'profile': f"{user_name}"})
+
+
+
+""" Rest API """
+
+
+@app.route('/<user_name>/data', methods=["GET"])
+def get(user_name):
+	return get_profile_data(user_name)
+
+
+@app.route('/<user_name>/data', methods=["POST"])
+def post(user_name):
+	return post_profile_data(user_name)
+		
+@app.route('/app_data')
+def get_app_data():
+	app_data = read_json('data/app_data.json')
+	return jsonify(app_data)
+	
 
 """ Create profile page """
 
 
-@app.route('/', methods=["GET", "POST"])
+@app.route('/')
 def index():
+	app_data = read_json('data/app_data.json')
+	app_data = app_data['1.0'][0]["members"]
 	## Render index.html by default
-	return render_template("index.html")
+	return render_template("index.html", members=app_data)
 
 
 """ Profile page """
@@ -75,7 +100,7 @@ def index():
 @app.route('/<user_name>')
 def profile_page(user_name):
 	## Get profile data
-	profiles_data = read_txt(f"data/profiles/all-profiles.txt")
+	profiles_data = read_txt("data/profiles/all-profiles.txt")
 	## Check if there is more then one profile
 	if len(profiles_data) > 0:
 		return render_template("profile.html",

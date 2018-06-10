@@ -3,4 +3,49 @@ General
 */
 
 
+a {
+	color: #ffffff;
+	text-decoration: none;
+}
+
+a:hover {
+	opacity: 0.7;
+}
+
+
+/* Login */
+
+.index_background {
+    padding: 0;
+    background: url("../images/main-background.jpg") no-repeat center;
+    background-attachment: scroll;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.card_login {
+	position: relative;
+}
+#create_profile_overlay {
+	position: absolute;
+	display: none;
+	padding: 0;
+	top: 0; 
+    left: 0;
+    right: 0;
+	bottom: 0;
+	z-index: 2;
+	width: 100% !important;
+	height: 15%;
+	width: 100px
+
+
+	/* display: none; */
+}
+#create_profile_overlay .card {
+	background-color: #000000;
+
+}
 
