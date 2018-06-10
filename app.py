@@ -55,8 +55,16 @@ def profile_page(user_name):
                         user_name=user_name, page_title=f"{user_name}" + " profile")
 
 
+""" Riddles Game Setting"""
+
+@app.route('/<user_name>/riddle-g-setting', methods=["GET", "POST"])
+def riddle_setting(user_name):
+	riddle.riddle_g_setting(user_name)
 
 
+@app.route('/<user_name>/riddle-game', methods=["GET", "POST"])
+def endless(user_name):
+	riddle.riddle_game(user_name)
 
 
 """ Chat in separate page """
@@ -72,11 +80,11 @@ if __name__ == '__main__':
             debug=True)
 
 """ Create 404 page and 500 error """
+""" Create members page """
 """ Categories for questions """
 """ Score """
 """ Limit wrong answers """
 """ Add riddle """
-""" Profiles """
 """ Passwords """
 """ View Friends """
 """ Chat / Password / Send Invitaiton / """

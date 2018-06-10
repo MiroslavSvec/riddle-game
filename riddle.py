@@ -11,7 +11,6 @@ app = Flask(__name__)
 """ Riddles Game Setting"""
 
 
-@app.route('/<user_name>/riddle-g-setting', methods=["GET", "POST"])
 def riddle_g_setting(user_name):
 	if request.method == "POST":
 		profiles_data = helper.read_txt("data/profiles/all-profiles.txt")
@@ -28,8 +27,7 @@ def riddle_g_setting(user_name):
 """ Riddle Game """
 
 
-@app.route('/<user_name>/riddle-game', methods = ["GET", "POST"])
-def endless(user_name):
+def riddle_game(user_name):
 	profiles_data = helper.read_txt("data/profiles/all-profiles.txt")
 	return render_template("riddle-game.html",
                         user_name=user_name, page_title="Riddle game", profiles=profiles_data)
