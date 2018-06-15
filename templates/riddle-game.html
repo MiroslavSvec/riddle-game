@@ -20,13 +20,13 @@
 		</ul>
 		<ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
 			<h4 class="text-center">Statistics</h4>
-			<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Components"><h5>Correct answers: 0</h5>
+			<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Components"><h5 id="right-answers"></h5>
 				
 			</li>
-			<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Example Pages"><h5>Wrong answers: 0</h5>
+			<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Example Pages"><h5 id="wrong-answers"></h5>
 				
 			</li>
-			<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Menu Levels"><h5>Skipped questions: 0</h5>
+			<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Menu Levels"><h5 id="skipped-questions"></h5>
 				
 			</li>
 			<li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
@@ -213,18 +213,20 @@
 	<div class="card-deck">
 		<div class="card">
 			<div class="card-header">
-				<h3 id="question">Q:{{question}} </h3>
+				<h3 id="question">Q:</h3>
 			</div>
-			<form method="POST">
+			<form onsubmit="return riddle_game_answer(this)">
 				<div class="form-group-sm">
 					<label for="answer">Enter your answer please</label>
 					<input name="answer" type="text" class="form-control" placeholder="Your answer?" required>					
 				</div>
-				<button type="submit" onclick="" class="btn btn-default">Submit</button>
-				<button type="submit" onclick="" class="btn btn-warning">Skip Question</button>
+				<button type="submit" class="btn btn-default">Submit</button>
+				<button type="submit" onclick="skip_question()" class="btn btn-warning">Skip Question</button>
 			</form>
 		</div>
-		<div class="card"></div>
+		<div id="riddle-game-result" class="card">
+			<h3 id="result"></h3>
+		</div>
 	</div>
 		<div class="card-footer mt-3"></div>
 </div>
@@ -233,7 +235,7 @@
 {% block scripts %}
 <script>
 	$(document).ready(function () {
-		show_riddle_game()
+		show_riddle_game();
 	})
 </script>
 {% endblock scripts %}

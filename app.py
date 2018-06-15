@@ -42,7 +42,7 @@ def get_app_data():
 @app.route('/')
 def index():
 	app_data = helper.read_json('data/system/app_data.json')
-	app_data = app_data['1.1'][0]["members"]
+	app_data = app_data['1.1'][0]["members"] - 1984
 	## Render index.html by default
 	return render_template("index.html", members=app_data)
 
@@ -96,11 +96,8 @@ def parse_setting(user_name):
 
 """ Riddles Game """
 
-@app.route('/user/<user_name>/riddle-game', methods=["GET", "POST"])
+@app.route('/user/<user_name>/riddle-game', methods=["GET"])
 def get_results(user_name):
-	## Main POST request for riddle-game
-	if request.method == "POST":
-		pass
 	## Render riddle-game template by default
 	return render_template("riddle-game.html",
                         user_name=user_name, page_title="Riddle Game")
@@ -108,12 +105,12 @@ def get_results(user_name):
 ## JSON POST to play the game
 @app.route('/postjson/<user_name>/riddle-game', methods=["POST", "GET"])
 def parse_answer(user_name):
+	## Main POST request for riddle-game
 	if request.method == "POST":
-		data = request.get_json(force=True)
-		return
+		data = riddle.riddle_game(user_name)		
+		return jsonify(data)
 	data = helper.read_json(
 		f"data/profiles/{user_name}/riddle_game/player_{user_name}.json")
-	
 	return jsonify(data)
 
 

@@ -28,6 +28,7 @@ another internal err when folder with data missing but user exist in all-users.t
 
 Need to updata localStorage when swaping between profiles
 Need to redirect if riddle game data already exists --- Fixed with if statment on load
+Need to add all long links under variables
 
 Check values of the profile
 
@@ -57,5 +58,8 @@ will use JS to handle the form check and and then redirect via Python
 
 Created rest API for profile data
 
-v 1.0 - Finished general idea for profiles and API
-v 1.1 - Added game section (list) to app_data as well as added section in the data for Riddle game
+v 1.0 :
+	- Finished general idea for profiles and API
+v 1.1 :
+	- Added game section (list) to app_data as well as added section in the data for Riddle game
+	- Added geme data creation

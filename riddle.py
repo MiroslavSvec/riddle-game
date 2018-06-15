@@ -17,16 +17,17 @@ app = Flask(__name__)
 """ Data Sample """
 
 ## {"riddle_game_data":{"id":"test","categories":"all","mods":"none","tries":"1"}}
+## {answer: "test answer"}
 
 ## {
-##	"test": [
+##	"game": [
 ##		{
 ##			"player_name": "test",
 ##			"game_started": "00:43:17",
 ##			"categories": "all",
 ##			"mods": "none",
 ##			"tries": "1",
-##			"score": 0,
+##			"result": "",
 ##			"right_answers": 0,
 ##			"wrong_answers": 0,
 ##			"skipped_questions": 0
@@ -67,22 +68,20 @@ def create_riddle_game(data):
          'tries': f"{data['riddle_game_data']['tries']}",
          'question': [],
          'answer': [],
+         'result': "",
          'score': 0,
          'right_answers': 0,
          'wrong_answers': 0,
          'skipped_questions': 0,
          })
-	# Write data
-    helper.write_to_txt(f"data/riddle-game/all-players.txt",
-                        "a", f"{profile_name}" + '\n')	
+	# Create Game folder
     os.makedirs(f"data/profiles/{profile_name}/riddle_game")
-    helper.write_to_json(
-        f"data/profiles/{profile_name}/riddle_game/player_{profile_name}.json", "w", riddle_game_data)
     ## Comment: Need to add error statment / add user questions
 	# Copy question file to work with fresh file
     if riddle_game_data["game"][0]["categories"] == "all":
         copyfile("data/riddle-game/all.json",
                  f"data/profiles/{profile_name}/riddle_game/questions.json")
+		
     elif riddle_game_data["game"][0]["categories"] == "general":
         copyfile("data/riddle-game/general.json",
                  f"data/profiles/{profile_name}/riddle_game/questions.json")
@@ -93,20 +92,58 @@ def create_riddle_game(data):
 	## To shuffle the questions that every game is different
     questions = helper.read_json(
         f"data/profiles/{profile_name}/riddle_game/questions.json")
-    random.shuffle(questions["all"])
+    random.shuffle(questions["questions"])
+	# Pick question from the database
+    riddle_game_data["game"][0]["question"] = pick_question(questions)
+	# Write data
+    helper.write_to_txt(f"data/riddle-game/all-players.txt",
+                        "a", f"{profile_name}" + '\n')	
+    helper.write_to_json(
+        f"data/profiles/{profile_name}/riddle_game/player_{profile_name}.json", "w", riddle_game_data)
     helper.write_to_json(
 	    f"data/profiles/{profile_name}/riddle_game/questions.json", "w", questions)
     return jsonify(riddle_game_data)
 
 
-def riddle_game(user_name):
-	data = request.get_json(force=True)
-	tries = data['riddle_game_data']['tries']
-	right_answers = data['riddle_game_data']['right_answers']
-	wrong_answers = data['riddle_game_data']['wrong_answers']
-	skipped_questions = data['riddle_game_data']['skipped_questions']
-	question_result = []
+def pick_question(questions):
+	question = questions["questions"][0]["riddle"]	
+	return question
 
-	with open(f"data/profiles/{user_name}/riddle_game/player_{user_name}.json", "r") as file:
-		game_data = json.load(file)
-		question_result = game_data
+
+
+def riddle_game(user_name):
+	questions = helper.read_json(
+	    f"data/profiles/{user_name}/riddle_game/questions.json")
+	profile = helper.read_json(
+	    f"data/profiles/{user_name}/riddle_game/player_{user_name}.json")
+	data = request.get_json(force=True)
+	## Format both user as well as correct answer
+	correct_answer = questions["questions"][0]["answer"]
+	correct_answer = correct_answer.lower()
+	correct_answer = "".join(correct_answer.split())
+	user_answer = data["answer"]
+	user_answer = "".join(user_answer.split())
+	user_answer = user_answer.lower()
+
+	
+	if user_answer == correct_answer:
+		profile["game"][0]["right_answers"] += 1
+		profile["game"][0]["result"] = "Correct"
+		helper.write_to_json(
+            f"data/profiles/{user_name}/riddle_game/player_{user_name}.json", "w", profile)
+		return profile
+	else:
+		profile["game"][0]["wrong_answers"] += 1
+		profile["game"][0]["result"] = "Wrong"
+		helper.write_to_json(
+                    f"data/profiles/{user_name}/riddle_game/player_{user_name}.json", "w", profile)
+		return profile
+	print(correct_answer)
+	print(user_answer)
+	print(profile)
+
+
+	return correct_answer
+
+
+

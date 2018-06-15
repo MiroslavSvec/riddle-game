@@ -33,7 +33,7 @@ function create_profile() {
 			$("#message").html("Profile " + `${data}` + " already exist");
 			$("#create_profile_overlay").slideDown(1000);
 		// Data are sent as arr
-		// IF the user does not exist yet rutern "succes"
+		// IF the user does not exist yet return "succes"
 		}else if (data[0].status == status) {
 			localStorage.setItem("user_comon_data", JSON.stringify(`${data[1].profile}`));
 			window.location.replace(`/user/${data[1].profile}`);
@@ -47,7 +47,7 @@ function create_profile() {
 
 
 /*
-Create (riddle.hmtl) 
+Create Game (riddle.hmtl) 
 */
 
 function create_riddle_game(form_data) {
@@ -80,20 +80,50 @@ function create_riddle_game(form_data) {
 	return false;
 }
 
-/*
-Riddle Game
-*/
+// Riddle Game
 
 function show_riddle_game() {
 	let user = get_comon_data();
 	$.get(`/postjson/${user}/riddle_g_setting`, function(data) {
-		console.log(data);
+		console.log(data);		
+		let riddle_game_data = data.game[0];
+		$("#question").html("Q: " + riddle_game_data.question);
+		$("#right-answers").html("Correct answers: " + riddle_game_data.right_answers);
+		$("#wrong-answers").html("Wrong answers: " + riddle_game_data.wrong_answers);
+		$("#skipped-questions").html("Skipped questions: " + riddle_game_data.skipped_questions);
 		
-		let riddle_game_data = data.[`${user}`];
 		console.log(riddle_game_data);
 
 	});
 	$("#riddle-game").fadeIn(5000);
+}
+
+function riddle_game_answer(form) {
+	let user = get_comon_data()
+	let answer = form.answer.value
+	console.log(answer);
+	$.post(
+		`/postjson/${user}/riddle-game`,
+		JSON.stringify({ answer: answer }),
+		function(data) {
+			let riddle_game_data = data.game[0];
+			if (riddle_game_data.result == "Correct") {
+				$("#result").html(riddle_game_data.result);				
+			}
+			else {
+				$("#result").html(riddle_game_data.result);	
+			}
+			$("#right-answers").html("Correct answers: " + riddle_game_data.right_answers);
+			$("#wrong-answers").html("Wrong answers: " + riddle_game_data.wrong_answers);
+			$("#skipped-questions").html("Skipped questions: " + riddle_game_data.skipped_questions);
+		}
+	);
+	return false
+}
+
+function skip_question() {
+
+	return false;
 }
 
 $(document).ready(function () {
