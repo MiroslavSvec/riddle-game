@@ -1,8 +1,7 @@
-
 import os
 import json
 from datetime import datetime
-from flask import jsonify
+from flask import Flask, redirect, request, render_template, jsonify
 
 
 """ Helper functions """
@@ -50,21 +49,16 @@ def create_profile_data(user_name):
                     {'name': f'{user_name}',
                      'login': "true",
                      'created': f'{profile_created}',
-                     'score': 0,
-                     'right_answers': 0,
-                     'wrong_answers': 0,
-                     'skipped_questions': 0,
-                     })
-
-		## App data
-		app_data = read_json('data/app_data.json')
-		members_count = app_data['1.0'][0]["members"]
-		app_data['1.0'][0]["members"] = members_count + 1
+                     })		
 		## Write data
 		os.makedirs(f"data/profiles/{user_name}")
-		write_to_json("data/app_data.json", "w", app_data)
 		write_to_json(f"data/profiles/{user_name}/{user_name}.json", "w", profiles)
 		write_to_txt(f"data/profiles/all-profiles.txt",
                     "a", f"{user_name}" + '\n')
+		## App data
+		app_data = read_json('data/system/app_data.json')
+		members_count = app_data['1.1'][0]["members"]
+		app_data['1.1'][0]["members"] = members_count + 1
+		write_to_json("data/system/app_data.json", "w", app_data)
 
 		return jsonify({'status': "success"}, {'profile': f"{user_name}"})

@@ -39,7 +39,7 @@
 					<ul class="sidenav-second-level collapse" id="collapseComponents">
 						{% for profile in profiles %}
 						<li>
-							<a href="/{{profile}}">
+							<a href="/user/{{profile}}">
 								<i class="fa fa-fw fa-address-card"></i> {{profile}}</a>
 						</li>
 						{% endfor %}
@@ -237,19 +237,19 @@
 				</div>
 			</div>
 		</div>
+		
 		<!-- Bootstrap core JavaScript-->
 		<script src="{{ url_for('static', filename='vendor/jquery/jquery.min.js') }}"></script>
 		<script src="{{ url_for('static', filename='vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-		<!-- Core plugin JavaScript-->		
+		<!-- Core plugin JavaScript-->
 		<script src="{{ url_for('static', filename='vendor/jquery-easing/jquery.easing.min.js') }}"></script>
-		<!-- Custom scripts for all pages-->		
+		<!-- Custom scripts for all pages-->
 		<script src="{{ url_for('static', filename='vendor/js/sb-admin.min.js') }}"></script>
-		<!-- Main JS-->		
+		<!-- Main JS-->
 		<script src="{{ url_for('static', filename='custom/js/main.js') }}"></script>
-
-		<script>
-			
-		</script>
+		 {% block scripts %}
+		{% endblock scripts %}
+		
 	</div>
 </body>
 

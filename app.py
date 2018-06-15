@@ -5,18 +5,22 @@ from random import shuffle
 from flask import Flask, redirect, request, render_template, jsonify
 
 ## Custom .py
-import riddle
 import helper
+import riddle
 
 app = Flask(__name__)
 
+
+""" Data Sample """
+
+## {"test": [{"name": "test", "login": "true", "created": "00:40:13"}]}
 
 """ Rest API """
 
 
 @app.route('/<user_name>/data', methods=["GET"])
 def get(user_name):
-	return helper.read_json(user_name)
+	return jsonify(helper.read_json(f"data/profiles/{user_name}/{user_name}.json"))
 
 
 @app.route('/<user_name>/data', methods=["POST"])
@@ -27,22 +31,32 @@ def post(user_name):
 def get_app_data():
 	app_data = helper.read_json('data/app_data.json')
 	return jsonify(app_data)
+
 	
+
+
 
 """ Create profile page """
 
 
 @app.route('/')
 def index():
-	app_data = helper.read_json('data/app_data.json')
-	app_data = app_data['1.0'][0]["members"]
+	app_data = helper.read_json('data/system/app_data.json')
+	app_data = app_data['1.1'][0]["members"]
 	## Render index.html by default
 	return render_template("index.html", members=app_data)
 
 
+
+""" Chat in separate page """
+
+@app.route('/chat')
+def chat():
+	return render_template("chat.html")
+
 """ Profile page """
 
-@app.route('/<user_name>')
+@app.route('/user/<user_name>')
 def profile_page(user_name):
 	## Get profile data
 	profiles_data = helper.read_txt("data/profiles/all-profiles.txt")
@@ -55,23 +69,58 @@ def profile_page(user_name):
                         user_name=user_name, page_title=f"{user_name}" + " profile")
 
 
-""" Riddles Game Setting"""
-
-@app.route('/<user_name>/riddle-g-setting', methods=["GET", "POST"])
+""" Riddles Game  Setting """
+@app.route('/user/<user_name>/riddle-g-setting')
 def riddle_setting(user_name):
-	riddle.riddle_g_setting(user_name)
+	## If game profile already exist redirect user to the game
+	riddle_profiles = helper.read_txt("data/riddle-game/all-players.txt")
+	profile = user_name + "\n"
+	if profile in riddle_profiles:
+		return redirect(f"/user/{user_name}/riddle-game")
+	else:
+		return riddle.riddle_g_setting(user_name)
+	
+
+## JSON requests to create save
+@app.route('/postjson/<user_name>/riddle_g_setting', methods=["POST", "GET"])
+def parse_setting(user_name):
+	# Create new game
+	if request.method == "POST":
+		data = request.get_json(force=True)
+		riddle.create_riddle_game(data)
+		return jsonify(data)
+	data = helper.read_json(
+		f"data/profiles/{user_name}/riddle_game/player_{user_name}.json")
+	return jsonify(data)
+	
+
+""" Riddles Game """
+
+@app.route('/user/<user_name>/riddle-game', methods=["GET", "POST"])
+def get_results(user_name):
+	## Main POST request for riddle-game
+	if request.method == "POST":
+		pass
+	## Render riddle-game template by default
+	return render_template("riddle-game.html",
+                        user_name=user_name, page_title="Riddle Game")
+
+## JSON POST to play the game
+@app.route('/postjson/<user_name>/riddle-game', methods=["POST", "GET"])
+def parse_answer(user_name):
+	if request.method == "POST":
+		data = request.get_json(force=True)
+		return
+	data = helper.read_json(
+		f"data/profiles/{user_name}/riddle_game/player_{user_name}.json")
+	
+	return jsonify(data)
 
 
-@app.route('/<user_name>/riddle-game', methods=["GET", "POST"])
-def endless(user_name):
-	riddle.riddle_game(user_name)
 
 
-""" Chat in separate page """
 
-@app.route('/chat')
-def chat():
-	return render_template("chat.html")
+
 
 
 if __name__ == '__main__':
@@ -83,8 +132,12 @@ if __name__ == '__main__':
 """ Create members page """
 """ Categories for questions """
 """ Score """
+""" Come up with some sort of search engine to get more questions injected from web """
 """ Limit wrong answers """
+""" Add multiple saves """
 """ Add riddle """
 """ Passwords """
 """ View Friends """
 """ Chat / Password / Send Invitaiton / """
+""" Inject graphs to mini statistcs in riddle-game.html """
+
