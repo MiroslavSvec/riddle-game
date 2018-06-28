@@ -75,6 +75,7 @@ def riddle_setting(user_name):
 	## If game profile already exist redirect user to the game
 	riddle_profiles = helper.read_txt("data/riddle-game/all-players.txt")
 	profile = user_name + "\n"
+	print(profile, user_name)
 	if profile in riddle_profiles:
 		return redirect(f"/user/{user_name}/riddle-game")
 	else:
@@ -89,8 +90,7 @@ def parse_setting(user_name):
 		data = request.get_json(force=True)
 		riddle.create_riddle_game(data)
 		return jsonify(data)
-	data = helper.read_json(
-		f"data/profiles/{user_name}/riddle_game/player_{user_name}.json")
+	data = helper.read_json(helper.profile(user_name))
 	return jsonify(data)
 	
 
@@ -109,8 +109,7 @@ def parse_answer(user_name):
 	if request.method == "POST":
 		data = riddle.riddle_game(user_name)		
 		return jsonify(data)
-	data = helper.read_json(
-		f"data/profiles/{user_name}/riddle_game/player_{user_name}.json")
+	data = helper.read_json(helper.profile(user_name))
 	return jsonify(data)
 
 

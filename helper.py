@@ -28,6 +28,18 @@ def read_json(filename):
 		return data
 
 
+## Questions json for riddle game
+def questions(user_name):
+	questions = f"data/profiles/{user_name}/riddle_game/questions.json"
+	return questions
+
+
+## Profile json
+def profile(user_name):
+	profile = f"data/profiles/{user_name}/riddle_game/player_{user_name}.json"
+	return profile
+
+
 def get_profile_data(user_name):
 	all_profiles = read_txt('data/profiles/all-profiles.txt')
 	for profile in all_profiles:
@@ -62,3 +74,6 @@ def create_profile_data(user_name):
 		write_to_json("data/system/app_data.json", "w", app_data)
 
 		return jsonify({'status': "success"}, {'profile': f"{user_name}"})
+
+
+
